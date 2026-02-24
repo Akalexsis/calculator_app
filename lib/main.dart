@@ -25,32 +25,52 @@ class CalculatorApp extends StatefulWidget {
 }
 
 class __CalculatorAppState extends State<CalculatorApp> {
-  // declare variables here
-  int val_1 = 0;
-  int val_2 = 0;
+  // store int values separately to better perform calculation
+  String num_1 = "";
+  String num_2 = "";
   int result = 0;
   String operator = '';
 
 
+  // append clicked value to num_1 only if no operator has been applied yet
+  void _setValues(String value) {
+    if ( operator.isEmpty ) {
+      setState(() => num_1 += value );
+    } else {
+      setState(() => num_2 += value);
+    }
+  }
 
-  // declare functions here 
+  // save selected value to operator
+  void _setOperator(String opp) {
+    setState(() => operator = opp);
+  }
+  
+  void _clear() {
+    setState(() => num_1 = '');
+    setState(() => num_2 = '');
+    setState(() => operator = '');
+  }
+  
+  // perform desired operation to num_1 and num_2 and display result to screen
   void _operation() {
     switch (operator){
-      case '+':
-        val_1 + val_2;
-        break;
-      case '-':
-        val_1 - val_2;
-        break;
-      case '/':
-        if (val_1 == 0){
-          print('Error, no division by 0');
-        }
-        val_1 / val_2;
-        break;
-      case '*':
-        val_1 * val_2;
-        break;
+      // case '+':
+      //   int.tryParse(num_1);
+      //   int.tryParse(num_2);
+      //   break;
+      // case '-':
+      //   num_1 - num_2;
+      //   break;
+      // case '/':
+      //   if (num_1 == 0){
+      //     print('Error, no division by 0');
+      //   }
+      //   num_1 / num_2;
+      //   break;
+      // case '*':
+      //   num_1 * num_2;
+      //   break;
     }
   }
 
@@ -61,30 +81,40 @@ class __CalculatorAppState extends State<CalculatorApp> {
       appBar: AppBar(
         title: Text('Calculator App'),
       ),
-      body: GridView.count(
-            crossAxisCount: 4,
-            mainAxisSpacing: 10,
-            crossAxisSpacing: 10,
-            children: [
-              ElevatedButton(onPressed: _operation, child: Text('C')),
-              ElevatedButton(onPressed: _operation, child: Text('7')),
-              ElevatedButton(onPressed: _operation, child: Text('8')),
-              ElevatedButton(onPressed: _operation, child: Text('9')),
-              ElevatedButton(onPressed: _operation, child: Text('/')),  
-              ElevatedButton(onPressed: _operation, child: Text('4')),
-              ElevatedButton(onPressed: _operation, child: Text('5')),
-              ElevatedButton(onPressed: _operation, child: Text('6')),
-              ElevatedButton(onPressed: _operation, child: Text('*')),
-              ElevatedButton(onPressed: _operation, child: Text('1')),
-              ElevatedButton(onPressed: _operation, child: Text('2')),
-              ElevatedButton(onPressed: _operation, child: Text('3')),
-              ElevatedButton(onPressed: _operation, child: Text('-')),
-              ElevatedButton(onPressed: _operation, child: Text('0')),
-              
-              ElevatedButton(onPressed: _operation, child: Text('+')),
-              ElevatedButton(onPressed: _operation, child: Text('=')),
-            ]
-          ),
-        );
+      body: Center(
+        child: SizedBox(
+          height: 300,
+          child: Column(
+          children: [
+          Text('$num_1 $operator $num_2'), // TO-DO - set styling
+          Expanded(
+          child: GridView.count(
+              crossAxisCount: 4,
+              mainAxisSpacing: 10,
+              crossAxisSpacing: 10,
+              children: [
+                ElevatedButton(onPressed: _clear, child: Text('C')),
+                ElevatedButton(onPressed: null, child: Text('Del')),
+                ElevatedButton(onPressed: () { _setOperator("%"); }, child: Text('%')), // TO-DO - implement percent
+                ElevatedButton(onPressed: () { _setOperator("/"); }, child: Text('/')),  // add to result var
+                ElevatedButton(onPressed: () { _setValues("7"); }, child: Text('7')),
+                ElevatedButton(onPressed: () { _setValues("8"); }, child: Text('8')),
+                ElevatedButton(onPressed: () { _setValues("9"); }, child: Text('9')),
+                ElevatedButton(onPressed: () { _setOperator("*"); }, child: Text('*')), // add to result var
+                ElevatedButton(onPressed: () { _setValues("4"); }, child: Text('4')),
+                ElevatedButton(onPressed: () { _setValues("5"); }, child: Text('5')),
+                ElevatedButton(onPressed: () { _setValues("6"); }, child: Text('6')),
+                ElevatedButton(onPressed: () { _setOperator("-"); }, child: Text('-')), // add to result var
+                ElevatedButton(onPressed: () { _setValues("1"); }, child: Text('1')),
+                ElevatedButton(onPressed: () { _setValues("2"); }, child: Text('2')),
+                ElevatedButton(onPressed: () { _setValues("3"); }, child: Text('3')),
+                ElevatedButton(onPressed: () { _setOperator("+"); }, child: Text('+')), // add to result var
+                ElevatedButton(onPressed: () { _setValues("8"); }, child: Text('0')),
+                ElevatedButton(onPressed: _operation, child: Text('=')), // perform operation
+              ]))
+            ]),
+          )
+        )
+      );
   }
 }
