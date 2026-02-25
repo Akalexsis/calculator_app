@@ -41,9 +41,14 @@ class __CalculatorAppState extends State<CalculatorApp> {
     }
   }
 
-  // save selected value to operator
+  // save selected value to operator if variable is empty, else display error message
   void _setOperator(String opp) {
-    setState(() => operator = opp);
+    if (operator.isNotEmpty) {
+      const useOperator = SnackBar(content: Text("An opperator has already been added"));
+      ScaffoldMessenger.of(context).showSnackBar(useOperator);
+    } else {
+      setState(() => operator = opp);
+    }
   }
   
   void _clear() {
@@ -51,26 +56,37 @@ class __CalculatorAppState extends State<CalculatorApp> {
     setState(() => num_2 = '');
     setState(() => operator = '');
   }
+
+  // ensure all input is filled before calculating the operation
+  bool _isValidOperation() {
+    if (num_1.isEmpty || num_2.isEmpty || operator.isEmpty) return false;
+    return true;
+  }
   
   // perform desired operation to num_1 and num_2 and display result to screen
   void _operation() {
-    switch (operator){
-      // case '+':
-      //   int.tryParse(num_1);
-      //   int.tryParse(num_2);
-      //   break;
-      // case '-':
-      //   num_1 - num_2;
-      //   break;
-      // case '/':
-      //   if (num_1 == 0){
-      //     print('Error, no division by 0');
-      //   }
-      //   num_1 / num_2;
-      //   break;
-      // case '*':
-      //   num_1 * num_2;
-      //   break;
+    if (_isValidOperation()){
+      switch (operator){
+        // case '+':
+        //   int.tryParse(num_1);
+        //   int.tryParse(num_2);
+        //   break;
+        // case '-':
+        //   num_1 - num_2;
+        //   break;
+        // case '/':
+        //   if (num_1 == 0){
+        //     print('Error, no division by 0');
+        //   }
+        //   num_1 / num_2;
+        //   break;
+        // case '*':
+        //   num_1 * num_2;
+        //   break;
+      }
+    } else {
+      const includeData = SnackBar(content: Text("Please complete the expression"));
+      ScaffoldMessenger.of(context).showSnackBar(includeData);
     }
   }
 
@@ -97,19 +113,23 @@ class __CalculatorAppState extends State<CalculatorApp> {
                 ElevatedButton(onPressed: null, child: Text('Del')),
                 ElevatedButton(onPressed: () { _setOperator("%"); }, child: Text('%')), // TO-DO - implement percent
                 ElevatedButton(onPressed: () { _setOperator("/"); }, child: Text('/')),  // add to result var
+
                 ElevatedButton(onPressed: () { _setValues("7"); }, child: Text('7')),
                 ElevatedButton(onPressed: () { _setValues("8"); }, child: Text('8')),
                 ElevatedButton(onPressed: () { _setValues("9"); }, child: Text('9')),
                 ElevatedButton(onPressed: () { _setOperator("*"); }, child: Text('*')), // add to result var
+
                 ElevatedButton(onPressed: () { _setValues("4"); }, child: Text('4')),
                 ElevatedButton(onPressed: () { _setValues("5"); }, child: Text('5')),
                 ElevatedButton(onPressed: () { _setValues("6"); }, child: Text('6')),
                 ElevatedButton(onPressed: () { _setOperator("-"); }, child: Text('-')), // add to result var
+
                 ElevatedButton(onPressed: () { _setValues("1"); }, child: Text('1')),
                 ElevatedButton(onPressed: () { _setValues("2"); }, child: Text('2')),
                 ElevatedButton(onPressed: () { _setValues("3"); }, child: Text('3')),
                 ElevatedButton(onPressed: () { _setOperator("+"); }, child: Text('+')), // add to result var
-                ElevatedButton(onPressed: () { _setValues("8"); }, child: Text('0')),
+
+                ElevatedButton(onPressed: () { _setValues("0"); }, child: Text('0')),
                 ElevatedButton(onPressed: _operation, child: Text('=')), // perform operation
               ]))
             ]),
