@@ -28,9 +28,9 @@ class __CalculatorAppState extends State<CalculatorApp> {
   // store int values separately to better perform calculation
   String num_1 = "";
   String num_2 = "";
-  int result = 0;
   String operator = '';
-
+  String? error;
+  double? result;
 
   // append clicked value to num_1 only if no operator has been applied yet
   void _setValues(String value) {
@@ -41,7 +41,7 @@ class __CalculatorAppState extends State<CalculatorApp> {
     }
   }
 
-  // save selected value to operator if variable is empty, else display error message
+  // save selected value to operator if no operator has been selected yet, else display error message
   void _setOperator(String opp) {
     if (operator.isNotEmpty) {
       const useOperator = SnackBar(content: Text("An opperator has already been added"));
@@ -51,39 +51,50 @@ class __CalculatorAppState extends State<CalculatorApp> {
     }
   }
   
-  void _clear() {
-    setState(() => num_1 = '');
-    setState(() => num_2 = '');
-    setState(() => operator = '');
-  }
-
   // ensure all input is filled before calculating the operation
   bool _isValidOperation() {
     if (num_1.isEmpty || num_2.isEmpty || operator.isEmpty) return false;
     return true;
   }
-  
+
+  void _clearAll() {
+    setState(() => num_1 = '');
+    setState(() => num_2 = '');
+    setState(() => operator = '');
+    setState(() => error = null);
+    setState(() => result = null);
+  }
+
+  void _clearOperands() {
+    setState(() => num_1 = '');
+    setState(() => num_2 = '');
+    setState(() => operator = '');
+  }
+
   // perform desired operation to num_1 and num_2 and display result to screen
   void _operation() {
     if (_isValidOperation()){
       switch (operator){
-        // case '+':
-        //   int.tryParse(num_1);
-        //   int.tryParse(num_2);
-        //   break;
-        // case '-':
-        //   num_1 - num_2;
-        //   break;
-        // case '/':
-        //   if (num_1 == 0){
-        //     print('Error, no division by 0');
-        //   }
-        //   num_1 / num_2;
-        //   break;
-        // case '*':
-        //   num_1 * num_2;
-        //   break;
+        case '+':
+          result = double.parse(num_1) + double.parse(num_2);
+          break;  
+        case '-':
+          result = double.parse(num_1) - double.parse(num_2);
+          break;
+        case '/':
+          if (double.parse(num_2) == 0){
+            _clearOperands();
+            setState(() => error = 'Divide by 0 Error'); // to display error message to screen, not pop-up
+            break;
+          }
+          result = double.parse(num_1) / double.parse(num_2);
+          break;
+        case '*':
+          result = double.parse(num_1) * double.parse(num_2);
+          break;
       }
+      _clearOperands();
+      setState(() => result = result);
     } else {
       const includeData = SnackBar(content: Text("Please complete the expression"));
       ScaffoldMessenger.of(context).showSnackBar(includeData);
@@ -102,14 +113,15 @@ class __CalculatorAppState extends State<CalculatorApp> {
           height: 300,
           child: Column(
           children: [
-          Text('$num_1 $operator $num_2'), // TO-DO - set styling
+          Text((result != null)? '$result' : '$num_1 $operator $num_2'), // only display result after calculating expression
+          Text((error != null) ? '$error' : ''),
           Expanded(
           child: GridView.count(
               crossAxisCount: 4,
               mainAxisSpacing: 10,
               crossAxisSpacing: 10,
               children: [
-                ElevatedButton(onPressed: _clear, child: Text('C')),
+                ElevatedButton(onPressed: _clearAll, child: Text('C')),
                 ElevatedButton(onPressed: null, child: Text('Del')),
                 ElevatedButton(onPressed: () { _setOperator("%"); }, child: Text('%')), // TO-DO - implement percent
                 ElevatedButton(onPressed: () { _setOperator("/"); }, child: Text('/')),  // add to result var
