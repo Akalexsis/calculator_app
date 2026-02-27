@@ -12,6 +12,30 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Calculator App',
       debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        colorScheme: ColorScheme(
+          brightness: Brightness.dark, 
+          primary: Colors.black26, 
+          onPrimary: Colors.white, 
+          secondary: const Color.fromARGB(255, 68, 160, 16), 
+          onSecondary: Colors.white, 
+          tertiary: const Color.fromARGB(255, 33, 43, 30),
+          error: Colors.redAccent, 
+          onError: Colors.redAccent,
+          surface: Colors.black,
+          onSurface: Colors.white
+        ), textTheme: TextTheme(
+          bodyMedium: TextStyle( fontSize: 16 )
+        ),
+        elevatedButtonTheme: ElevatedButtonThemeData(
+          style: ElevatedButton.styleFrom(
+            foregroundColor: Colors.white,
+            backgroundColor: Colors.black,
+            fixedSize: Size(5, 5),
+            padding: EdgeInsets.all(10)
+          ),
+        ),
+      ), 
       home: const CalculatorApp(),
     );
   }
@@ -71,6 +95,15 @@ class __CalculatorAppState extends State<CalculatorApp> {
     setState(() => operator = '');
   }
 
+  void _toPercent() {
+    if ( operator.isEmpty ) {
+      double convert = double.parse(num_1) / 100;
+      setState(() => num_1 += convert.toString() );
+    } else {
+      double convert = double.parse(num_2) / 100;
+      setState(() => num_2 += convert.toString());
+    }
+  }
   // perform desired operation to num_1 and num_2 and display result to screen
   void _operation() {
     if (_isValidOperation()){
@@ -121,28 +154,46 @@ class __CalculatorAppState extends State<CalculatorApp> {
               mainAxisSpacing: 10,
               crossAxisSpacing: 10,
               children: [
-                ElevatedButton(onPressed: _clearAll, child: Text('C')),
-                ElevatedButton(onPressed: null, child: Text('Del')),
-                ElevatedButton(onPressed: () { _setOperator("%"); }, child: Text('%')), // TO-DO - implement percent
-                ElevatedButton(onPressed: () { _setOperator("/"); }, child: Text('/')),  // add to result var
+                ElevatedButton(onPressed: _clearAll, 
+                  style: ElevatedButton.styleFrom(backgroundColor: Theme.of(context).colorScheme.tertiary),
+                  child: Text('C')
+                ),
+                ElevatedButton(onPressed: null, 
+                  style: ElevatedButton.styleFrom(backgroundColor: Theme.of(context).colorScheme.tertiary),
+                  child: Text('Del')
+                ),
+                ElevatedButton(onPressed: _toPercent, 
+                  style: ElevatedButton.styleFrom(backgroundColor: Theme.of(context).colorScheme.tertiary),
+                  child: Text('%')),
+                ElevatedButton(onPressed: () { _setOperator("/"); }, 
+                  style: ElevatedButton.styleFrom(backgroundColor: Theme.of(context).colorScheme.secondary),
+                  child: Text('/')),  // add to result var
 
                 ElevatedButton(onPressed: () { _setValues("7"); }, child: Text('7')),
                 ElevatedButton(onPressed: () { _setValues("8"); }, child: Text('8')),
                 ElevatedButton(onPressed: () { _setValues("9"); }, child: Text('9')),
-                ElevatedButton(onPressed: () { _setOperator("*"); }, child: Text('*')), // add to result var
+                ElevatedButton(onPressed: () { _setOperator("*"); }, 
+                  style: ElevatedButton.styleFrom(backgroundColor: Theme.of(context).colorScheme.secondary),
+                  child: Text('*')), // add to result var
 
                 ElevatedButton(onPressed: () { _setValues("4"); }, child: Text('4')),
                 ElevatedButton(onPressed: () { _setValues("5"); }, child: Text('5')),
                 ElevatedButton(onPressed: () { _setValues("6"); }, child: Text('6')),
-                ElevatedButton(onPressed: () { _setOperator("-"); }, child: Text('-')), // add to result var
+                ElevatedButton(onPressed: () { _setOperator("-"); }, 
+                  style: ElevatedButton.styleFrom(backgroundColor: Theme.of(context).colorScheme.secondary),
+                  child: Text('-')), // add to result var
 
                 ElevatedButton(onPressed: () { _setValues("1"); }, child: Text('1')),
                 ElevatedButton(onPressed: () { _setValues("2"); }, child: Text('2')),
                 ElevatedButton(onPressed: () { _setValues("3"); }, child: Text('3')),
-                ElevatedButton(onPressed: () { _setOperator("+"); }, child: Text('+')), // add to result var
+                ElevatedButton(onPressed: () { _setOperator("+"); }, 
+                  style: ElevatedButton.styleFrom(backgroundColor: Theme.of(context).colorScheme.secondary),
+                  child: Text('+')), // add to result var
 
                 ElevatedButton(onPressed: () { _setValues("0"); }, child: Text('0')),
-                ElevatedButton(onPressed: _operation, child: Text('=')), // perform operation
+                ElevatedButton(onPressed: _operation, 
+                  style: ElevatedButton.styleFrom(backgroundColor: Theme.of(context).colorScheme.secondary),
+                  child: Text('=')), // perform operation
               ]))
             ]),
           )
