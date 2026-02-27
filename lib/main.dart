@@ -98,10 +98,10 @@ class __CalculatorAppState extends State<CalculatorApp> {
   void _toPercent() {
     if ( operator.isEmpty ) {
       double convert = double.parse(num_1) / 100;
-      setState(() => num_1 += convert.toString() );
+      setState(() => num_1 = convert.toString() );
     } else {
       double convert = double.parse(num_2) / 100;
-      setState(() => num_2 += convert.toString());
+      setState(() => num_2 = convert.toString());
     }
   }
   // perform desired operation to num_1 and num_2 and display result to screen
